@@ -20,32 +20,32 @@ mongoose
   });
 
 // Schema
-const Adding = mongoose.model(
-  "add",
-  new mongoose.Schema({
-    volunteerId: String,
-    fullName: String,
-    department: String,
-    yearOfStudy: String,
-    email: String,
-    phone: String,
-    dateOfBirth: String,
-    gender: String,
-    address: String,
-    bloodGroup: String,
-    campName: String,
-    hoursCompleted: String,
-    unitNumber: String,
-  })
-);
+const volunteerSchema = new mongoose.Schema({
+  volunteerId: String,
+  fullName: String,
+  department: String,
+  yearOfStudy: String,
+  email: String,
+  phone: String,
+  dateOfBirth: String,
+  gender: String,
+  address: String,
+  bloodGroup: String,
+  campName: String,
+  hoursCompleted: String,
+  unitNumber: String,
+});
 
-// Add Volunteer
+const Adding = mongoose.model("Volunteer", volunteerSchema);
+
+// =================== ADD ===================
 app.post("/add-vol", async (req, res) => {
   try {
     const volunteer = await Adding.create(req.body);
 
     res.json({
       status: "success",
+      message: "Volunteer Added Successfully",
       data: volunteer,
     });
   } catch (error) {
@@ -56,7 +56,7 @@ app.post("/add-vol", async (req, res) => {
   }
 });
 
-// View All Volunteers
+// =================== VIEW ===================
 app.post("/view-vol", async (req, res) => {
   try {
     const volunteers = await Adding.find();
@@ -70,44 +70,10 @@ app.post("/view-vol", async (req, res) => {
   }
 });
 
-// Update Volunteer
-app.put("/update-vol/:id", async (req, res) => {
-  try {
-    const updatedVolunteer = await Adding.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
 
-    res.json({
-      status: "updated",
-      data: updatedVolunteer,
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "failed",
-      error: error.message,
-    });
-  }
-});
 
-// Delete Volunteer
-app.delete("/delete-vol/:id", async (req, res) => {
-  try {
-    await Adding.findByIdAndDelete(req.params.id);
 
-    res.json({
-      status: "deleted",
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "failed",
-      error: error.message,
-    });
-  }
-});
 
-// Start Server
 app.listen(3000, () => {
   console.log("Server started on port 3000");
 });
